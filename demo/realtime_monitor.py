@@ -416,6 +416,11 @@ class WorkoutMonitor:
             camera_id: Camera device ID (0 for default webcam)
         """
         cap = cv2.VideoCapture(camera_id)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+        window_name = 'Workout Monitor'
+        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
         
         if not cap.isOpened():
             print("Error: Could not open camera")
@@ -433,6 +438,14 @@ class WorkoutMonitor:
         
         # FPS calculation
         fps_history = deque(maxlen=30)
+
+        def _fit_frame_for_display(img, max_w=1280, max_h=720):
+            ih, iw = img.shape[:2]
+            if iw <= max_w and ih <= max_h:
+                return img
+            scale = min(max_w / float(iw), max_h / float(ih))
+            nw, nh = int(iw * scale), int(ih * scale)
+            return cv2.resize(img, (nw, nh), interpolation=cv2.INTER_AREA)
         
         while cap.isOpened():
             start_time = time.time()
@@ -440,6 +453,8 @@ class WorkoutMonitor:
             ret, frame = cap.read()
             if not ret:
                 break
+
+            frame = cv2.flip(frame, 1)
             
             # Process frame
             frame = self.process_frame(frame)
@@ -456,7 +471,8 @@ class WorkoutMonitor:
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             
             # Show frame
-            cv2.imshow('Workout Monitor', frame)
+            display_frame = _fit_frame_for_display(frame)
+            cv2.imshow(window_name, display_frame)
             
             # Handle key presses
             key = cv2.waitKey(1) & 0xFF

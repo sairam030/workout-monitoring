@@ -1,41 +1,14 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-
-# Virtual environments
+# Python virtual environment
 venv/
 .venv/
-env/
 
-# Jupyter
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter checkpoints
 .ipynb_checkpoints/
 
-# OS/editor
+# OS/editor noise
 .DS_Store
 .vscode/
-
-# Local git backups (created during cleanup)
-.git_backup_*/
-
-# Data / artifacts (keep code repo small)
-data/
-results/
-models/
-*.npz
-*.npy
-*.pkl
-*.joblib
-*.h5
-*.onnx
-
-# Videos
-*.mp4
-*.avi
-*.mov
-*.mkv
